@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>太阳系模拟器 - 视觉改进展示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(circle at center, #0A0D2C 0%, #1A1F4A 40%, #0F1133 70%, #000000 100%);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(138, 43, 226, 0.2));
+            border-radius: 20px;
+            border: 1px solid #00FFFF;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00FFFF;
+            background: linear-gradient(45deg, #00FFFF, #8A2BE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .improvements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .improvement-card {
+            background: linear-gradient(135deg, rgba(75, 97, 209, 0.2), rgba(138, 43, 226, 0.2));
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .improvement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+        }
+
+        .improvement-card h3 {
+            color: #00FFFF;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px #00FFFF;
+        }
+
+        .improvement-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .improvement-card li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .improvement-card li:before {
+            content: "⭐";
+            position: absolute;
+            left: 0;
+            color: #00FFFF;
+        }
+
+        .demo-section {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .planet-demo {
+            display: inline-block;
+            margin: 20px;
+            position: relative;
+        }
+
+        .sun-demo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFFFFF 0%, #FFEB3B 30%, #FFD700 60%, #FF8C00 80%, #FF6347 100%);
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 40px rgba(255, 215, 0, 0.4),
+                0 0 60px rgba(255, 215, 0, 0.2);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.4), 0 0 60px rgba(255, 215, 0, 0.2); }
+            to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.6), 0 0 70px rgba(255, 215, 0, 0.4); }
+        }
+
+        .planet {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            position: relative;
+        }
+
+        .earth { background: radial-gradient(circle at 30% 30%, #3A6B8C, #2A5B7C); }
+        .mars { background: radial-gradient(circle at 30% 30%, #C67C6D, #B66C5D); }
+        .jupiter { background: radial-gradient(circle at 30% 30%, #BC987E, #AC886E); }
+        .saturn { background: radial-gradient(circle at 30% 30%, #E0C9A6, #D0B996); }
+
+        .saturn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 20px;
+            border: 2px solid rgba(176, 159, 125, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .selected-planet {
+            animation: pulse 1.5s ease-in-out infinite;
+            box-shadow: 
+                0 0 15px #00FFFF,
+                0 0 25px rgba(0, 255, 255, 0.5),
+                0 0 35px rgba(0, 255, 255, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .control-panel {
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.9), rgba(10, 13, 44, 0.8));
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #8A2BE2;
+            box-shadow: 0 -5px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .speed-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00FFFF, #8A2BE2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .speed-slider {
+            flex: 1;
+            height: 6px;
+            background: #2A3D66;
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .speed-slider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 60%;
+            background: linear-gradient(90deg, #00FFFF, #8A2BE2);
+            border-radius: 3px;
+        }
+
+        .speed-slider::after {
+            content: '';
+            position: absolute;
+            left: 60%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 24px;
+            height: 24px;
+            background: #00FFFF;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .speed-value {
+            background: linear-gradient(135deg, #8A2BE2, #4B61D1);
+            padding: 8px 16px;
+            border-radius: 16px;
+            border: 1px solid #00FFFF;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #C0C0C0;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🪐 太阳系模拟器视觉升级</h1>
+            <p>全新的宇宙视觉体验，科幻感十足的用户界面</p>
+        </div>
+
+        <div class="improvements-grid">
+            <div class="improvement-card">
+                <h3>🌌 宇宙背景增强</h3>
+                <ul>
+                    <li>径向渐变深空背景</li>
+                    <li>多彩星云效果</li>
+                    <li>三层次星星系统</li>
+                    <li>十字光芒亮星</li>
+                </ul>
+            </div>
+
+            <div class="improvement-card">
+                <h3>☀️ 太阳视觉升级</h3>
+                <ul>
+                    <li>三重光晕效果</li>
+                    <li>五色径向渐变</li>
+                    <li>表面耀斑模拟</li>
+                    <li>太阳黑子效果</li>
+                </ul>
+            </div>
+
+            <div class="improvement-card">
+                <h3>🎯 行星选择系统</h3>
+                <ul>
+                    <li>双层选择环</li>
+                    <li>脉冲波纹效果</li>
+                    <li>方向指示器</li>
+                    <li>轨道粒子特效</li>
+                </ul>
+            </div>
+
+            <div class="improvement-card">
+                <h3>🪐 行星渲染增强</h3>
+                <ul>
+                    <li>光影渐变效果</li>
+                    <li>行星阴影系统</li>
+                    <li>彩色光晕效果</li>
+                    <li>特殊特征增强</li>
+                </ul>
+            </div>
+
+            <div class="improvement-card">
+                <h3>💻 用户界面现代化</h3>
+                <ul>
+                    <li>渐变背景设计</li>
+                    <li>发光文字效果</li>
+                    <li>多重阴影系统</li>
+                    <li>科幻风格按钮</li>
+                </ul>
+            </div>
+
+            <div class="improvement-card">
+                <h3>📊 数据展示优化</h3>
+                <ul>
+                    <li>渐变数据卡片</li>
+                    <li>图标圆形容器</li>
+                    <li>分区信息布局</li>
+                    <li>增强型滑块</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 style="color: #00FFFF; margin-bottom: 30px; text-shadow: 0 0 10px #00FFFF;">视觉效果演示</h2>
+            
+            <div class="planet-demo">
+                <div class="sun-demo"></div>
+                <p style="margin-top: 10px; color: #FFD700;">增强太阳效果</p>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 30px; margin: 40px 0;">
+                <div class="planet-demo">
+                    <div class="planet earth"></div>
+                    <p style="margin-top: 10px;">地球</p>
+                </div>
+                <div class="planet-demo">
+                    <div class="planet mars"></div>
+                    <p style="margin-top: 10px;">火星</p>
+                </div>
+                <div class="planet-demo">
+                    <div class="planet jupiter selected-planet"></div>
+                    <p style="margin-top: 10px;">木星 (选中)</p>
+                </div>
+                <div class="planet-demo">
+                    <div class="planet saturn"></div>
+                    <p style="margin-top: 10px;">土星</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <h3 style="color: #00FFFF; margin-bottom: 20px; text-shadow: 0 0 8px #00FFFF;">
+                🎮 增强型控制面板
+            </h3>
+            
+            <div class="speed-control">
+                <div class="speed-icon">⚡</div>
+                <span style="color: white; font-weight: 600;">时间流速控制</span>
+                <div class="speed-slider"></div>
+                <div class="speed-value">⏱️ 3.0x</div>
+            </div>
+
+            <p style="color: #C0C0C0; margin-top: 15px; font-size: 0.9em;">
+                ✨ 全新的渐变设计 | 🌟 发光效果 | 💫 现代化交互
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>🚀 太阳系模拟器 - 探索宇宙的奥秘</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                采用Flutter技术，跨平台运行，支持Android、iOS、Web、Desktop
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 创建星星效果
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 200;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 页面加载时创建星星
+        window.addEventListener('load', createStars);
+
+        // 为行星添加点击效果
+        document.querySelectorAll('.planet').forEach(planet => {
+            planet.addEventListener('click', function() {
+                document.querySelectorAll('.planet').forEach(p => p.classList.remove('selected-planet'));
+                this.classList.add('selected-planet');
+            });
+        });
+    </script>
+</body>
+</html>
