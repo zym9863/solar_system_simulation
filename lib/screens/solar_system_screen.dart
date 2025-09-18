@@ -14,38 +14,78 @@ class _SolarSystemScreenState extends State<SolarSystemScreen> with SingleTicker
   // 构建行星数据项
   Widget _buildPlanetDataItem(String label, String value, IconData icon) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF2A3D66).withOpacity(0.3),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: const Color(0xFF8A2BE2).withOpacity(0.3),
-          width: 1,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0x664B61D1),
+            Color(0x448A2BE2),
+          ],
         ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF00FFFF).withOpacity(0.5),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00FFFF).withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: const Color(0xFF00FFFF),
-            size: 20,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF00FFFF), Color(0xFF8A2BE2)],
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF00FFFF).withOpacity(0.5),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Color(0xFFE0E0E0),
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFFC0C0C0),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
             value,
+            textAlign: TextAlign.center,
             style: const TextStyle(
               fontFamily: 'Orbitron',
-              fontSize: 14,
+              fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Color(0xFF00FFFF),
+                  blurRadius: 4,
+                ),
+              ],
             ),
           ),
         ],
@@ -189,33 +229,105 @@ class _SolarSystemScreenState extends State<SolarSystemScreen> with SingleTicker
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text(
-          '太阳系模拟',
-          style: TextStyle(
-            fontFamily: 'Orbitron',
-            fontSize: 24,
-            color: Color(0xFF2A3D66),
-            fontWeight: FontWeight.bold,
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Color(0x4400FFFF), Color(0x448A2BE2)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: const Color(0xFF00FFFF),
+              width: 1,
+            ),
+          ),
+          child: const Text(
+            '🪐 太阳系模拟器',
+            style: TextStyle(
+              fontFamily: 'Orbitron',
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  color: Color(0xFF00FFFF),
+                  blurRadius: 8,
+                  offset: Offset(0, 0),
+                ),
+              ],
+            ),
           ),
         ),
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.black.withOpacity(0.3),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              _isPaused ? Icons.play_arrow : Icons.pause,
-              color: const Color(0xFF00FFFF),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.black.withOpacity(0.6),
+                Colors.black.withOpacity(0.3),
+              ],
             ),
-            onPressed: _togglePause,
-            tooltip: _isPaused ? '播放' : '暂停',
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.refresh,
-              color: Color(0xFF00FFFF),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0x4400FFFF), Color(0x228A2BE2)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFF00FFFF),
+                width: 1,
+              ),
             ),
-            onPressed: _resetView,
-            tooltip: '重置视图',
+            child: IconButton(
+              icon: Icon(
+                _isPaused ? Icons.play_arrow : Icons.pause,
+                color: const Color(0xFF00FFFF),
+                shadows: const [
+                  Shadow(
+                    color: Color(0xFF00FFFF),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+              onPressed: _togglePause,
+              tooltip: _isPaused ? '播放' : '暂停',
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0x4400FFFF), Color(0x228A2BE2)],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFF00FFFF),
+                width: 1,
+              ),
+            ),
+            child: IconButton(
+              icon: const Icon(
+                Icons.refresh,
+                color: Color(0xFF00FFFF),
+                shadows: [
+                  Shadow(
+                    color: Color(0xFF00FFFF),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+              onPressed: _resetView,
+              tooltip: '重置视图',
+            ),
           ),
         ],
       ),
@@ -242,91 +354,246 @@ class _SolarSystemScreenState extends State<SolarSystemScreen> with SingleTicker
           // 行星信息面板
           if (_selectedPlanet != null)
             Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
-                color: Colors.black87.withOpacity(0.85),
+                gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xE6000000),  // 半透明黑色
+                    Color(0xCC0A0D2C),  // 深蓝色
+                  ],
+                ),
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF00FFFF).withOpacity(0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, -3),
+                    color: const Color(0xFF00FFFF).withOpacity(0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, -5),
+                  ),
+                  BoxShadow(
+                    color: const Color(0xFF8A2BE2).withOpacity(0.2),
+                    blurRadius: 20,
+                    offset: const Offset(0, -8),
                   ),
                 ],
-                // 毛玻璃效果
-                backgroundBlendMode: BlendMode.srcOver,
+                border: const Border(
+                  top: BorderSide(
+                    color: Color(0xFF00FFFF),
+                    width: 2,
+                  ),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 顶部装饰条
+                  Center(
+                    child: Container(
+                      width: 60,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF00FFFF), Color(0xFF8A2BE2)],
+                        ),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        _selectedPlanet!.name,
-                        style: const TextStyle(
-                          fontFamily: 'Orbitron',
-                          fontSize: 24, 
-                          color: Colors.white, 
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Color(0xFF00FFFF),
-                              blurRadius: 8,
-                              offset: Offset(0, 0),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _selectedPlanet!.name,
+                              style: const TextStyle(
+                                fontFamily: 'Orbitron',
+                                fontSize: 28, 
+                                color: Colors.white, 
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(
+                                    color: Color(0xFF00FFFF),
+                                    blurRadius: 12,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '第${_solarSystem.planets.indexOf(_selectedPlanet!) + 1}颗行星',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Color(0xFFC0C0C0),
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF2A3D66),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          '特征: ${_selectedPlanet!.specialFeature}',
-                          style: const TextStyle(
-                            fontSize: 14, 
-                            color: Color(0xFFC0C0C0),
-                            fontWeight: FontWeight.w500,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF8A2BE2), Color(0xFF4B61D1)],
                           ),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: const Color(0xFF00FFFF),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.auto_awesome,
+                              color: Color(0xFF00FFFF),
+                              size: 16,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              _selectedPlanet!.specialFeature,
+                              style: const TextStyle(
+                                fontSize: 14, 
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(8),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Colors.black.withOpacity(0.4),
+                          const Color(0xFF0A0D2C).withOpacity(0.6),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFF2A3D66).withOpacity(0.5),
+                        color: const Color(0xFF8A2BE2).withOpacity(0.3),
                         width: 1,
                       ),
                     ),
-                    child: Text(
-                      _selectedPlanet!.description,
-                      style: const TextStyle(
-                        fontSize: 16, 
-                        color: Color(0xFFC0C0C0),
-                        height: 1.4,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.info_outline,
+                              color: Color(0xFF00FFFF),
+                              size: 18,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              '行星信息',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF00FFFF),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _selectedPlanet!.description,
+                          style: const TextStyle(
+                            fontSize: 15, 
+                            color: Color(0xFFE0E0E0),
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   // 行星数据可视化
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildPlanetDataItem('自转周期', '${_selectedPlanet!.rotationPeriod.toStringAsFixed(1)}秒', Icons.rotate_right),
-                      _buildPlanetDataItem('公转周期', '${_selectedPlanet!.orbitPeriod.toStringAsFixed(1)}秒', Icons.sync),
-                      _buildPlanetDataItem('半径', '${_selectedPlanet!.radius.toStringAsFixed(1)}px', Icons.radio_button_unchecked),
-                    ],
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          const Color(0xFF8A2BE2).withOpacity(0.1),
+                          Colors.transparent,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFF00FFFF).withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.analytics_outlined,
+                              color: Color(0xFF00FFFF),
+                              size: 18,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              '数据统计',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xFF00FFFF),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Expanded(
+                              child: _buildPlanetDataItem(
+                                '自转周期', 
+                                '${_selectedPlanet!.rotationPeriod.toStringAsFixed(1)}秒', 
+                                Icons.rotate_right
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildPlanetDataItem(
+                                '公转周期', 
+                                '${_selectedPlanet!.orbitPeriod.toStringAsFixed(1)}秒', 
+                                Icons.sync
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _buildPlanetDataItem(
+                                '半径', 
+                                '${_selectedPlanet!.radius.toStringAsFixed(1)}px', 
+                                Icons.radio_button_unchecked
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -334,66 +601,129 @@ class _SolarSystemScreenState extends State<SolarSystemScreen> with SingleTicker
           
           // 速度控制滑块
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
             decoration: BoxDecoration(
-              color: Colors.black87.withOpacity(0.85),
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xE6000000),
+                  Color(0xCC0A0D2C),
+                ],
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  color: const Color(0xFF00FFFF).withOpacity(0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, -4),
                 ),
               ],
+              border: const Border(
+                top: BorderSide(
+                  color: Color(0xFF8A2BE2),
+                  width: 1,
+                ),
+              ),
             ),
             child: Column(
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.speed, color: Color(0xFF00FFFF)),
-                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF00FFFF), Color(0xFF8A2BE2)],
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.speed,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     const Text(
-                      '时间流速',
+                      '时间流速控制',
                       style: TextStyle(
                         fontFamily: 'Exo 2.0',
-                        fontSize: 14,
-                        color: Color(0xFFC0C0C0),
-                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2A3D66),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${_speedFactor.toStringAsFixed(1)}x',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF00FFFF),
-                          fontWeight: FontWeight.bold,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8A2BE2), Color(0xFF4B61D1)],
                         ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFF00FFFF),
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF00FFFF).withOpacity(0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.timer,
+                            color: Color(0xFF00FFFF),
+                            size: 16,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${_speedFactor.toStringAsFixed(1)}x',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  color: Color(0xFF00FFFF),
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 SliderTheme(
                   data: SliderThemeData(
                     activeTrackColor: const Color(0xFF00FFFF),
                     inactiveTrackColor: const Color(0xFF2A3D66),
                     thumbColor: const Color(0xFF00FFFF),
-                    overlayColor: const Color(0xFF00FFFF).withOpacity(0.2),
-                    trackHeight: 4,
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                    overlayColor: const Color(0xFF00FFFF).withOpacity(0.3),
+                    trackHeight: 6,
+                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+                    valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
+                    valueIndicatorColor: const Color(0xFF8A2BE2),
+                    valueIndicatorTextStyle: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   child: Slider(
                     value: _speedFactor,
                     min: 0.1,
                     max: 5.0,
                     divisions: 49,
+                    label: '${_speedFactor.toStringAsFixed(1)}x',
                     onChanged: _adjustSpeed,
                   ),
                 ),
